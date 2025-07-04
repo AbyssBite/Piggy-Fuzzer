@@ -30,15 +30,29 @@ def fuzz_once(protocol: str, target: dict, base_payload: bytes, mutation_count: 
             "response": send_udp(target["ip"], target["port"], mutated_payload)
         }
     elif protocol == "http":
+        raw_result = send_http(
+            url=target["url"],
+            method=target.get("method", "POST"),
+            headers=target.get("headers", {}),
+            body=mutated_payload
+        )
+        
+        status = raw_result.get("status_code", 0)
+        status_group = "other"
+
+        if 200 <= status < 300:
+            status_group = "2xx ✅"
+        elif 400 <= status < 500:
+            status_group = "4xx ⚠️"
+        elif 500 <= status < 600:
+            status_group = "5xx ❌"
+
         return {
-            "protocol": mutated_payload.decode(errors="replace"),
-            "response": send_http(
-                url=target["url"],
-                method=target.get("method", "POST"),
-                headers=target.get("headers", {}),
-                body=mutated_payload
-            )
+            "payload": mutated_payload.decode(errors="replace"),
+            "response": raw_result,
+            "status_group": status_group
         }
+
         
     else:
         raise ValueError(f"Unsupported protocol: {protocol}")
