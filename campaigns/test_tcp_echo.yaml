@@ -1,0 +1,9 @@
+campaign: "TCP Echo Fuzz"
+protocol: "tcp"
+target:
+  ip: "127.0.0.1"
+  port: 8080
+payload: "GET / HTTP/1.1\\r\\nHost: localhost\\r\\n\\r\\n"
+iterations: 5
+mutation_count: 5
+rate_limit: 0.2
