@@ -6,4 +6,4 @@ logs/
 *.pyd
 *.log
 *.sqlite3
-
+venv/
