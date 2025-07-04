@@ -19,5 +19,5 @@ def send_tcp(ip: str, port: int, data: bytes, timeout: float = 2.0) -> bytes:
             sock.sendall(data)
             sock.settimeout(timeout)
             return sock.recv(4096)
-    except (socket.timeout, socket.error) as e:
+    except (socket.timeout, socket.error):
         return b''
